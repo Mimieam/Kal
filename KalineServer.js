@@ -3,7 +3,7 @@ var apn  = require("apn")
 var apnError = function(err){
     console.log("APN Error:", err);
 }
-
+console.log(process.env)
 var options = {
     "cert": process.env['APN_CERT_PEM'],
     "key":  process.env['APN_KEY_PEM'],
