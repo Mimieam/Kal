@@ -18,16 +18,25 @@ Kal.init = function init () {}
 
 /* check every 30 seconds if we have a new notification and schedules it*/
 Kal.checkPending = function checkPending() {
+  var notif = null
   for (var idx in Kal.pending){
     notif = Kal.pending[idx];
-    // console.log(notif)
-    Kal.schedule.at(notif.dueDate, function(res) {sendNotification(notif)})
+    if (notif.status == 0) {
+      Kal.schedule.at(notif.dueDate, function(res) {sendNotification(notif)})
+      console.log(idx, notif.description, moment(notif.dueDate).format('HH:mm'))
+      var time = moment(notif.dueDate).format('HH:mm')
+      var desc = notif.description
+      notif.status = 1
+      notif.save()
+      console.log("Notif Successfull {" +time+ "}: " + desc)
+    }
   }
 }
 
 /* push Available notification to Kal.pending */
 Kal.getNotification = function getNotification () {
   Kal.db.fetchActivities(0, notificationHandler)
+  console.log("check")
 }
 
 function notificationHandler (err, notifArr) {
@@ -134,9 +143,20 @@ function updateSchedule(Schedule) {
 /* main */
 var myDailies = userDailySchedule()  // get Stuff from User
 updateSchedule(myDailies) // update database
-Kal.getNotification() // pull db for latest notification
+// while(1){
+  // console.log("chekc log")
+// }
+setInterval(function(){
+  Kal.getNotification() // pull db for latest notification
+  Kal.checkPending()
+//   // get all the users
+//   Users.find({}, function(err, users) {
+//     if (err) throw err;
 
-// Kal.checkPending()
+//     // object of all the users
+//     console.log(users);
+//   });
+}, 5000);
 
 
 
