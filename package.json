@@ -1,0 +1,29 @@
+{
+  "name": "Kal",
+  "author": {
+    "name": "Miezan Echimane",
+    "email": "t.echismimi@gmail.com"
+  },
+  "description": "",
+  "version": "0.0.1",
+  "homepage": "",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nko4/website.git"
+  },
+  "bugs": {
+    "url": ""
+  },
+  "main": "Kal.js",
+  "engines": {
+    "node": ">=0.10"
+  },
+  "dependencies": {
+    "apn": "^1.7.5",
+    "moment": "^2.11.2",
+    "mongoose": "^4.4.2",
+    "reminder": "^0.1.1"
+  },
+  "devDependencies": {},
+  "readmeFilename": "README.md"
+}
