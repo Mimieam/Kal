@@ -68,7 +68,6 @@ function getStartAndEndDateTime (startingHour, endingHour) {
 
 
 
-// Kal.checkPending()
 
 /* a daily scandule send from a user device */
 function userDailySchedule () {
@@ -136,6 +135,8 @@ function updateSchedule(Schedule) {
 var myDailies = userDailySchedule()  // get Stuff from User
 updateSchedule(myDailies) // update database
 Kal.getNotification() // pull db for latest notification
+
+// Kal.checkPending()
 
 
 
