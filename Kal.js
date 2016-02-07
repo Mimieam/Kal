@@ -18,22 +18,27 @@ Kal.init = function init () {}
 
 /* check every 30 seconds if we have a new notification and schedules it*/
 Kal.checkPending = function checkPending() {
-  if (Kal.pending.length){
-    notif = Kal.pending[0];
+  for (var idx in Kal.pending){
+    notif = Kal.pending[idx];
+    console.log(notif)
     Kal.schedule.at(notif.dueDate, function(res) {sendNotification(notif)})
   }
 }
 
 /* test function */
 Kal.getNotification = function getNotification () {
-  var notif = {
-    id:"007",
-    devToken:'f780692d61453893b756d13eb5324921f40ba270f0434a6f9a265ac736dd6b08',
-    description: "Eat something",
-    dueDate: moment().add(1,"m").format("HH:mm"),
-    timezone: 0,
+
+  var notifArr = Kal.db.fetchActivities(0, notificationHandler)
+
+ }
+
+function notificationHandler (err, notifArr) {
+  if (err) {console.log(err);}
+  else {
+    for (var idx in Kal.pending){
+      Kal.pending.push(notif)
+    }
   }
-  Kal.pending.push(notif)
 }
 
 function sendNotification (notif) {
@@ -62,7 +67,7 @@ function getStartAndEndDateTime (startingHour, endingHour) {
   return [startDate, endDate]
 }
 
-Kal.getNotification()
+
 
 // Kal.checkPending()
 
@@ -73,6 +78,7 @@ function userDailySchedule () {
       type: 1,
       name: "Meals Schedule",
       devToken:'f780692d61453893b756d13eb5324921f40ba270f0434a6f9a265ac736dd6b08',
+      scheduleId:"schedIDxxx123",
       startDate: ['08:00', "HH:mm"],
       endDate: ['23:00', "HH:mm"],
     },
@@ -124,7 +130,6 @@ function updateSchedule(Schedule) {
   for (var idx in Schedule.activities) {
 
     var NewAct = Kal.db.createNewActivity(userInfo, activities[idx])
-    console.log(NewAct)
     Kal.db.saveActivities(NewAct)
 
 
@@ -132,9 +137,30 @@ function updateSchedule(Schedule) {
 }
 
 /* main */
-
 var myDailies = userDailySchedule()
 updateSchedule(myDailies)
+Kal.getNotification()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 module.exports = {

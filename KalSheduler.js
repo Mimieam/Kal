@@ -28,8 +28,8 @@ var ActivityModel = {
   timestamp: Date, // the last this activity was executed
   status: Number,  // 0 = incomplete, 1 = completed
   recurrent: Boolean,
-  schedule_id: {type: Object, required: true, default: "null"},
-  notification_number: Number // this activity number within a schedule.
+  scheduleId: {type: String, required: true, default: ""},
+  notificationNumber: Number // this activity number within a schedule.
 }
 
 var ScheduleModel = {
@@ -41,33 +41,13 @@ var Users     = mongoose.model('Users', UserModel);
 var Activity = mongoose.model('Activity', ActivityModel); // an Activity is anything that we need to do, schedule , reminder, task, job
 /*- -*/
 
-// on every save, add the date
-
-var deviceToken = "dfasfdasdf"
-// var newUser = new Users({token:"f780692d61453893b756d13eb5324921f40ba270f0434a6f9a265ac736dd6b08", deviceType:"ios", timestamp:new Date()})
-// var newUser2 = new Users({token:"dfasfdasdf", deviceType:"ios", timestamp:new Date()})
-var testUser = {token:"testUser1", deviceType:"ios", timestamp:new Date()}
-
-
-var newActivity = new Activity({
-  token:"f780692d61453893b756d13eb5324921f40ba270f0434a6f9a265ac736dd6b08",
-  deviceType:"ios",
-  description: "testing Activity for KalScheduler",
-  dueDate: new Date(),
-  timezone: new Date().getTimezoneOffset(),
-  startTime: new Date(),
-  endTime: new Date(),
-  timestamp: new Date(),
-  status: 0,
-  recurrent: false
-})
 
 function createNewActivity(meta, act){
-  console.log(meta)
   return Activity({
     token:meta.devToken,
     deviceType: meta.devType,
     description: act.task,
+    scheduleId: meta.scheduleId,
     dueDate: moment(act.time, "HH:mm").utc().toDate(),
     timezone: new Date().getTimezoneOffset(),
     startTime: moment(meta.startDate[0], meta.startDate[1]),  // date and format
@@ -113,7 +93,7 @@ function saveActivities (newActivity) {
 
 
 function fetchActivities(_status, cb) {
-  Activity.find({status: _status}, cb)
+  return Activity.find({status: _status}, cb)
   //  Activity.find({status: _status}, function (err, activities) {
   //   console.error(String(err)) // ValidationError: enum validator failed for path `state` with value `invalid`
   //   console.log("act" ,activities)
@@ -144,7 +124,8 @@ function sortByDueDate (actA, actB) {
 
 var db = mongoose.connect( mongoConnectionString , function(err, res) {
   if (err) {
-    console.log.bind(console, 'mongoose connection error: ');
+    console.log(err)
+    // console.log.bind(console, 'mongoose connection error: ');
   } else {
     console.log('Succeeded connecting to DB');
   }
@@ -159,7 +140,7 @@ var db = mongoose.connect( mongoConnectionString , function(err, res) {
 //     console.log(users);
 //   });
 // }, 30000);
-function activityHandler (err, arr) {
+function rescheduleActivity (err, arr) {
   var curDate = moment()
   console.log("Cur Date: ", curDate.format())
 
@@ -171,9 +152,9 @@ function activityHandler (err, arr) {
 
     act = arr[idx]
     if (moment(act.dueDate) < curDate ) { // timezone not handled
-      console.log("Due Date: ", moment(act.dueDate).add(31,"d").format())
+      console.log("Due Date: ", moment(act.dueDate).add(1,"d").format())
       if (act.recurrent){
-        act.dueDate = moment()
+        act.dueDate = moment(act.dueDate).add(1,"d")
         act.save(function () {
           console.log("Due Date updated ")
         })
@@ -182,6 +163,7 @@ function activityHandler (err, arr) {
       break // don't go thru the whole list
     }
   }
+  return arr
 }
 // setInterval(function(){
   // get all the users
@@ -205,7 +187,7 @@ module.exports = {
   createOrUpdateDevice: createOrUpdateDevice,
   saveActivities: saveActivities,
   fetchActivities: fetchActivities,
-  activityHandler: activityHandler,
+  rescheduleActivity: rescheduleActivity,
 }
 // }, 2000);
 
