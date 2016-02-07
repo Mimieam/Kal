@@ -20,25 +20,24 @@ Kal.init = function init () {}
 Kal.checkPending = function checkPending() {
   for (var idx in Kal.pending){
     notif = Kal.pending[idx];
-    console.log(notif)
+    // console.log(notif)
     Kal.schedule.at(notif.dueDate, function(res) {sendNotification(notif)})
   }
 }
 
-/* test function */
+/* push Available notification to Kal.pending */
 Kal.getNotification = function getNotification () {
-
-  var notifArr = Kal.db.fetchActivities(0, notificationHandler)
-
- }
+  Kal.db.fetchActivities(0, notificationHandler)
+}
 
 function notificationHandler (err, notifArr) {
   if (err) {console.log(err);}
   else {
-    for (var idx in Kal.pending){
-      Kal.pending.push(notif)
+    for (var idx in notifArr){
+      Kal.pending.push(notifArr[idx])
     }
   }
+  console.log("# of notification loaded = " + Kal.pending.length)
 }
 
 function sendNotification (notif) {
@@ -128,18 +127,15 @@ function updateSchedule(Schedule) {
   var userInfo = Schedule.metaData
   var activities = Schedule.activities
   for (var idx in Schedule.activities) {
-
     var NewAct = Kal.db.createNewActivity(userInfo, activities[idx])
     Kal.db.saveActivities(NewAct)
-
-
   }
 }
 
 /* main */
-var myDailies = userDailySchedule()
-updateSchedule(myDailies)
-Kal.getNotification()
+var myDailies = userDailySchedule()  // get Stuff from User
+updateSchedule(myDailies) // update database
+Kal.getNotification() // pull db for latest notification
 
 
 
