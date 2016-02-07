@@ -1,1 +1,1 @@
-web: node Kal.js
+worker: node Kal.js
