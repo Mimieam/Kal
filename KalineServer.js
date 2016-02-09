@@ -5,8 +5,8 @@ var apnError = function(err){
 }
 
 var options = {
-    "cert": "cert.pem",
-    "key": "key.pem",
+    "cert": "./cert.pem",
+    "key": "./key.pem",
     "passphrase": null,
     "gateway": "gateway.sandbox.push.apple.com",
     "port": 2195,
