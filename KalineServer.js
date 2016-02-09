@@ -18,7 +18,9 @@ options.errorCallback = apnError;
 
 var feedBackOptions = {
     "batchFeedback": true,
-    "interval": 300
+    "interval": 300,
+    "cert": "./cert.pem",
+    "key": "./key.pem",
 };
 
 var apnConnection, feedback;
