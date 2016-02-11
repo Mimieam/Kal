@@ -20,6 +20,7 @@ options.errorCallback = apnError;
 var feedBackOptions = {
     "batchFeedback": true,
     "interval": 300,
+    "production": false,
     "cert": process.env.APN_CERT_PEM || "cert.pem",
     "key":  process.env.APN_KEY_PEM  || "key.pem",
 };
