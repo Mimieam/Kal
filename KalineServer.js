@@ -8,7 +8,7 @@ var options = {
     "cert": process.env.APN_CERT_PEM || "cert.pem",
     "key":  process.env.APN_KEY_PEM  || "key.pem",
     "production": false,
-    "passphrase": null,
+    "passphrase": process.env.APN_PASSPHRASE || null,
     "gateway": "gateway.sandbox.push.apple.com",
     "port": 2195,
     "enhanced": true,
